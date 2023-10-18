@@ -1,4 +1,4 @@
-package com.example.springboot2023sec;
+package com.example.springboot2023sec.controllers;
 
 
 import org.springframework.http.ResponseEntity;
