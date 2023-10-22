@@ -1,28 +1,24 @@
 package com.example.springboot2023sec.config;
 
-import jakarta.servlet.Filter;
-import lombok.AllArgsConstructor;
+
 import lombok.RequiredArgsConstructor;
-import org.springframework.boot.autoconfigure.security.SecurityProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.annotation.Order;
 import org.springframework.security.authentication.AuthenticationProvider;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configurers.AuthorizeHttpRequestsConfigurer;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import static org.springframework.security.config.Customizer.withDefaults;
+import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
 
 @EnableWebSecurity
 @Configuration
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-    private final JwtAuthenticationFilter jwtAuthFilter;
+    private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final AuthenticationProvider authenticationProvider;
 
     //    @Bean
@@ -36,20 +32,18 @@ public class SecurityConfig {
 //        return (SecurityFilterChain)http.build();
 //    }
     @Bean
-//    @Order(SecurityProperties.BASIC_AUTH_ORDER) // we are overwriting this shit
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(withDefaults())
-//                .authorizeHttpRequests(withDefaults())
                 .authorizeHttpRequests(req ->
-                        req.requestMatchers("/api/v1/auth/**")
+                        req.requestMatchers("api/v1/auth/**","/api/v1/demo/**")
                                 .permitAll()
                                 .anyRequest()
                                 .authenticated()
                 )
-                .sessionManagement(withDefaults())
+                .sessionManagement(session -> session.sessionCreationPolicy(STATELESS))
                 .authenticationProvider(authenticationProvider)
-                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 }
