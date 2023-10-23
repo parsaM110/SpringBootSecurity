@@ -12,6 +12,8 @@ import org.springframework.stereotype.Service;
 
 import java.security.Key;
 import java.util.Date;
+import java.util.Map;
+import java.util.Objects;
 
 @Service
 public class JWTServiceImpl implements JWTService {
@@ -23,6 +25,17 @@ public class JWTServiceImpl implements JWTService {
                 .setSubject(userDetails.getUsername())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60))
+                .signWith(getSigninKey(), SignatureAlgorithm.HS256)
+                .compact();
+
+    }
+
+    public String generateRefreshToken(Map<String, Object> extraClaims,  UserDetails userDetails) {
+        return Jwts.builder()
+                .setClaims(extraClaims)
+                .setSubject(userDetails.getUsername())
+                .setIssuedAt(new Date(System.currentTimeMillis()))
+                .setExpiration(new Date(System.currentTimeMillis() + 7 * 24 * 1000 * 60 * 60))
                 .signWith(getSigninKey(), SignatureAlgorithm.HS256)
                 .compact();
 
