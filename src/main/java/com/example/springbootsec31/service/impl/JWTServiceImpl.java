@@ -1,5 +1,6 @@
 package com.example.springbootsec31.service.impl;
 
+import com.example.springbootsec31.service.JWTService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -13,7 +14,7 @@ import java.security.Key;
 import java.util.Date;
 
 @Service
-public class JWTServiceImpl {
+public class JWTServiceImpl implements JWTService {
 
 
 
