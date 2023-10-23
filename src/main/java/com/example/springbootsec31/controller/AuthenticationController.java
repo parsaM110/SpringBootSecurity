@@ -1,6 +1,7 @@
 package com.example.springbootsec31.controller;
 
 import com.example.springbootsec31.dto.JwtAuthenticationResponse;
+import com.example.springbootsec31.dto.RefreshTokenRequest;
 import com.example.springbootsec31.dto.SignInRequest;
 import com.example.springbootsec31.dto.SignUpRequest;
 import com.example.springbootsec31.entity.User;
@@ -30,4 +31,11 @@ public class AuthenticationController {
     public ResponseEntity<JwtAuthenticationResponse> signin(@RequestBody SignInRequest signInRequest){
         return ResponseEntity.ok(authenticationService.signin(signInRequest));
     }
+
+    @PostMapping("/refresh")
+    public ResponseEntity<JwtAuthenticationResponse> refresh(@RequestBody RefreshTokenRequest refreshTokenRequest){
+        return ResponseEntity.ok(authenticationService.refreshToken(refreshTokenRequest));
+    }
+
+
 }

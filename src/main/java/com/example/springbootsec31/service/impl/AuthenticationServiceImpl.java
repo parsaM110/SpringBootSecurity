@@ -1,6 +1,7 @@
 package com.example.springbootsec31.service.impl;
 
 import com.example.springbootsec31.dto.JwtAuthenticationResponse;
+import com.example.springbootsec31.dto.RefreshTokenRequest;
 import com.example.springbootsec31.dto.SignInRequest;
 import com.example.springbootsec31.dto.SignUpRequest;
 import com.example.springbootsec31.entity.Role;
@@ -64,6 +65,27 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         return jwtAuthenticationResponse;
 
 
+    }
+
+    public JwtAuthenticationResponse refreshToken(RefreshTokenRequest refreshTokenRequest) {
+
+        String userEmail = jwtService.extractUserName(refreshTokenRequest.getRefreshToken());
+
+        User user = userRepository.findByEmail(userEmail)
+                .orElseThrow(() -> new RuntimeException("Invaid Refresh Token"));
+
+        if (jwtService.isTokenValid(refreshTokenRequest.getRefreshToken(), user)) {
+
+            var jwt = jwtService.generateToken(user);
+
+            JwtAuthenticationResponse jwtAuthenticationResponse = new JwtAuthenticationResponse();
+
+            jwtAuthenticationResponse.setAccessToken(jwt);
+            jwtAuthenticationResponse.setRefreshToken(refreshTokenRequest.getRefreshToken());
+
+            return jwtAuthenticationResponse;
+        }
+        return null;
     }
 
 }
