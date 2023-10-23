@@ -7,12 +7,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-@RequestMapping("/api/v1/admin")
+@RequestMapping("/api/v1/guest")
 @RequiredArgsConstructor
-public class AdminController {
+public class GuestController {
 
     @GetMapping
     public ResponseEntity<String> sayHello(){
-        return ResponseEntity.ok("Hello Admin");
+        return ResponseEntity.ok("Hello Guest");
     }
 }

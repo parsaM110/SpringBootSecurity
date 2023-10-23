@@ -41,16 +41,20 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         if (StringUtils.isEmpty(authHeader) || !org.apache.commons.lang3.StringUtils.startsWith(authHeader, "Bearer ")) {
             filterChain.doFilter(request, response);
+            System.out.println("\033[0;31m" + "authHeader is empty or doesn't start with Bearer" + "\033[0m");
             return;
         }
 
         jwt = authHeader.substring(7);
+        System.out.println("\033[0;32m" + "we got Bearer " + jwt + "\033[0m");
         userEmail = jwtService.extractUserName(jwt);
+        System.out.println("\033[0;32m" + "we got userEmail : " + userEmail +  "\033[0m");
 
-        if (StringUtils.isEmpty(userEmail) && SecurityContextHolder.getContext().getAuthentication() == null) {
+        if (!StringUtils.isEmpty(userEmail) && SecurityContextHolder.getContext().getAuthentication() == null) {
             UserDetails userDetails = userService.userDetailsService().loadUserByUsername(userEmail);
+            System.out.println("\033[0;32m" + "we got userDetails : " + userDetails +  "\033[0m");
 
-            if(jwtService.isTokenValid(jwt, userDetails)) {
+            if (jwtService.isTokenValid(jwt, userDetails)) {
                 SecurityContext securityContext = SecurityContextHolder.createEmptyContext();
                 UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(
                         userDetails,
